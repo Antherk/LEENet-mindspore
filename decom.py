@@ -13,7 +13,7 @@ class DecomNet(nn.Cell):
                                             nn.Conv2d(channel, channel, kernel_size, pad_mode='pad', padding=1),
                                             nn.ReLU(),
                                             nn.Conv2d(channel, channel, kernel_size, pad_mode='pad', padding=1)])
-        self.net_recon =   nn.Conv2d(channel, 6, pad_mode='pad', padding=1)
+        self.net_recon =   nn.Conv2d(channel, 6, kernel_size, pad_mode='pad', padding=1)
 
     def construct(self, input):
         feat_shallow    = self.net_shallow(input)

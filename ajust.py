@@ -30,16 +30,16 @@ class AjustNet(nn.Cell):
         output_2        = self.relu(self.conv1_2(output_1))
         output_3        = self.relu(self.conv1_3(output_2))
         
-        output_1_up     = nn.ResizeBilinear(output_3,size=(output_2.shape[2], output_2.shape[3]))
+        output_1_up     = ops.interpolate(output_3,size=(output_2.shape[2], output_2.shape[3]))
         deconv1         = self.relu(self.deconv1_1(ops.Concat((output_1_up, output_2), axis=1)))
-        output_2_up     = nn.ResizeBilinear(deconv1,size=(output_1.shape[2], output_1.shape[3]))
+        output_2_up     = ops.interpolate(deconv1,size=(output_1.shape[2], output_1.shape[3]))
         deconv2         = self.relu(self.deconv1_2(ops.Concat((output_2_up, output_1), axis=1)))
-        output_3_up     = nn.ResizeBilinear(deconv2,size=(output_0.shape[2], output_0.shape[3]))
+        output_3_up     = ops.interpolate(deconv2,size=(output_0.shape[2], output_0.shape[3]))
         deconv3         = self.relu(self.deconv1_3(ops.Concat((output_3_up, output_0), axis=1)))
 
 
-        deconv1_rs      = nn.ResizeBilinear(deconv1,size=(I.shape[2], I.shape[3]))
-        deconv2_rs      = nn.ResizeBilinear(deconv2,size=(I.shape[2], I.shape[3]))
+        deconv1_rs      = ops.interpolate(deconv1,size=(I.shape[2], I.shape[3]))
+        deconv2_rs      = ops.interpolate(deconv2,size=(I.shape[2], I.shape[3]))
         feats_concate   = ops.Concat((deconv1_rs, deconv2_rs, deconv3), axis=1)
         
         feats_fusion    = self.fusion(feats_concate)
